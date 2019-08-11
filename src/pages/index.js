@@ -1,21 +1,66 @@
+import styled from "styled-components"
 import React from "react"
-import { Link } from "gatsby"
+import { graphql } from "gatsby"
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  flex-wrap: wrap;
+`
+const Grid = styled.section`
+  width: 75vw;
+  display: grid;
+  margin: 0 auto;
+  grid-template: 1fr 1fr / repeat(auto-fit, 10rem);
+  justify-content: space-around;
+`
 
-import Layout from "../components/layout"
-import Image from "../components/image"
-import SEO from "../components/seo"
+const GridItem = styled.a`
+  height: 200px;
+  width: 100%;
+  background-color: red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 0;
+`
 
-const IndexPage = () => (
-  <Layout>
-    <SEO title="Home" />
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-      <Image />
-    </div>
-    <Link to="/page-2/">Go to page 2</Link>
-  </Layout>
-)
+export const query = graphql`
+         query HomePageQuery {
+           allMarkdownRemark(
+             filter: { fileAbsolutePath: { regex: "//social//" } }
+           ) {
+             edges {
+               node {
+                 fileAbsolutePath
+                 frontmatter {
+                   title
+                   date
+                   link
+                   path
+                 }
+                 rawMarkdownBody
+               }
+             }
+           }
+         }
+       `
+
+const IndexPage = ({ data }) => {
+  const social = data.allMarkdownRemark.edges.map(edge => edge.node.frontmatter)
+
+  return (
+    <Container>
+      <Grid>
+        {social.map(entry => (
+          <GridItem key={entry.link} href={entry.link}>
+            {entry.title}
+          </GridItem>
+        ))}
+      </Grid>
+    </Container>
+  )
+}
 
 export default IndexPage
