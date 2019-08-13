@@ -2,6 +2,6 @@
   "version": 2,
   "name": "andi1984.social",
   "alias": ["www.andi1984.social", "andi1984.social"],
-  "regions": ["bru1", "cdg1"],
+  "regions": ["bru1"],
   "builds": [{ "src": "package.json", "use": "@now/static-build" }]
 }
