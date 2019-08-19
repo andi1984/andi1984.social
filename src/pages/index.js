@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import React from "react"
-import { graphql } from "gatsby"
+import { graphql, useStaticQuery } from "gatsby"
 import pictureOfMyself from "../images/me.jpg"
 const Container = styled.div`
   display: flex;
@@ -45,35 +45,33 @@ const GridItem = styled.a`
   transform: perspective(1px) skew(355deg) translateZ(0);
   backface-visibility: hidden;
   border: 10px solid transparent;
-  
+
   &:focus {
     mix-blend-mode: difference;
     border-color: #eebd81;
   }
 `
 
-export const query = graphql`
-  query HomePageQuery {
-    allMarkdownRemark(filter: { fileAbsolutePath: { regex: "//social//" } }) {
-      edges {
-        node {
-          fileAbsolutePath
-          frontmatter {
-            title
-            date
-            link
-            path
+const IndexPage = () => {
+  const data = useStaticQuery(graphql`
+    query HomePageQuery {
+      allMarkdownRemark(filter: { fileAbsolutePath: { regex: "//social//" } }) {
+        edges {
+          node {
+            fileAbsolutePath
+            frontmatter {
+              title
+              date
+              link
+              path
+            }
+            rawMarkdownBody
           }
-          rawMarkdownBody
         }
       }
     }
-  }
-`
-
-const IndexPage = ({ data }) => {
+  `)
   const social = data.allMarkdownRemark.edges.map(edge => edge.node.frontmatter)
-
   return (
     <Container>
       <Heading>Contact me</Heading>
